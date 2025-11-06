@@ -1,6 +1,6 @@
 local config = require("modules/config")
 
-UI = {}
+local UI = {}
 
 function UI.subAdd(mod)
 	nativeSettings.addSubcategory("/watchdog/global", "Global")
@@ -16,7 +16,7 @@ function UI.subAdd(mod)
 		function(state)
 			mod.settings.global.KillProcess = state
 			mod:applyOptions()
-			config.saveFile("config.json", mod.settings)
+			config.saveFile(mod.CONFIG_PATH, mod.settings)
 		end
 	)
 
@@ -32,7 +32,7 @@ function UI.subAdd(mod)
 		function(value)
 			mod.settings.global.TimeoutSeconds = value
 			mod:applyOptions()
-			config.saveFile("config.json", mod.settings)
+			config.saveFile(mod.CONFIG_PATH, mod.settings)
 		end
 	)
 
@@ -44,7 +44,7 @@ function UI.subAdd(mod)
 		mod.settingsDefault.photo.KillProcess,
 		function(state)
 			mod.settings.photo.KillProcess = state
-			config.saveFile("config.json", mod.settings)
+			config.saveFile(mod.CONFIG_PATH, mod.settings)
 		end
 	)
 
@@ -59,7 +59,7 @@ function UI.subAdd(mod)
 		mod.settingsDefault.photo.TimeoutSeconds,
 		function(value)
 			mod.settings.photo.TimeoutSeconds = value
-			config.saveFile("config.json", mod.settings)
+			config.saveFile(mod.CONFIG_PATH, mod.settings)
 		end
 	)
 
@@ -72,7 +72,7 @@ function UI.subAdd(mod)
 		function(state)
 			mod.settings.advanced.ActiveIfDebuggerPresent = state
 			mod:applyOptions()
-			config.saveFile("config.json", mod.settings)
+			config.saveFile(mod.CONFIG_PATH, mod.settings)
 		end
 	)
 
@@ -85,7 +85,7 @@ function UI.subAdd(mod)
 		function(state)
 			mod.settings.advanced.ActiveIfDialogBlocking = state
 			mod:applyOptions()
-			config.saveFile("config.json", mod.settings)
+			config.saveFile(mod.CONFIG_PATH, mod.settings)
 		end
 	)
 
@@ -98,7 +98,7 @@ function UI.subAdd(mod)
 		function(state)
 			mod.settings.advanced.ActiveIfScriptBreakpointBlocking = state
 			mod:applyOptions()
-			config.saveFile("config.json", mod.settings)
+			config.saveFile(mod.CONFIG_PATH, mod.settings)
 		end
 	)
 
@@ -111,7 +111,7 @@ function UI.subAdd(mod)
 		function(state)
 			mod.settings.advanced.DumpJobExecutionContext = state
 			mod:applyOptions()
-			config.saveFile("config.json", mod.settings)
+			config.saveFile(mod.CONFIG_PATH, mod.settings)
 		end
 	)
 
@@ -127,7 +127,7 @@ function UI.subAdd(mod)
 		function(value)
 			mod.settings.advanced.ThreadFrequencyHz = value
 			mod:applyOptions()
-			config.saveFile("config.json", mod.settings)
+			config.saveFile(mod.CONFIG_PATH, mod.settings)
 		end
 	)
 end
@@ -154,7 +154,7 @@ function UI.main(mod)
 		function(state)
 			mod.settings.enabled = state
 			mod:applyOptions()
-			config.saveFile("config.json", mod.settings)
+			config.saveFile(mod.CONFIG_PATH, mod.settings)
 			if not mod.settings.enabled then
 				UI.subDel()
 			else

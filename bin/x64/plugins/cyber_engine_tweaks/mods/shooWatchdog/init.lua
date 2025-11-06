@@ -1,4 +1,7 @@
-shoo = {
+local settingsUI = require("modules/settingsUI")
+local config = require("modules/config")
+
+Shoo = {
 	settings = {},
 	settingsDefault = {
 		enabled = true,
@@ -18,44 +21,45 @@ shoo = {
 			ThreadFrequencyHz = 15,
 		},
 	},
-	settingsUI = require("modules/settingsUI"),
+	CONFIG_PATH = "config.json"
 }
 
-function shoo:applyOptions()
+function Shoo:applyOptions()
 	GameOptions.SetBool("Engine/Watchdog", "Enabled", self.settings.enabled)
 	GameOptions.SetBool("Engine/Watchdog", "KillProcess", self.settings.global.KillProcess)
 	GameOptions.SetInt("Engine/Watchdog", "TimeoutSeconds", self.settings.global.TimeoutSeconds)
 	GameOptions.SetBool("Engine/Watchdog", "ActiveIfDebuggerPresent", self.settings.advanced.ActiveIfDebuggerPresent)
 	GameOptions.SetBool("Engine/Watchdog", "ActiveIfDialogBlocking", self.settings.advanced.ActiveIfDialogBlocking)
-	GameOptions.SetBool("Engine/Watchdog", "ActiveIfScriptBreakpointBlocking", self.settings.advanced.ActiveIfScriptBreakpointBlocking)
+	GameOptions.SetBool("Engine/Watchdog", "ActiveIfScriptBreakpointBlocking",
+		self.settings.advanced.ActiveIfScriptBreakpointBlocking)
 	GameOptions.SetBool("Engine/Watchdog", "DumpJobExecutionContext", self.settings.advanced.DumpJobExecutionContext)
 	GameOptions.SetInt("Engine/Watchdog", "ThreadFrequencyHz", self.settings.advanced.ThreadFrequencyHz)
 end
 
-function shoo:applyPMOptions()
+function Shoo:applyPMOptions()
 	GameOptions.SetBool("Engine/Watchdog", "KillProcess", self.settings.photo.KillProcess)
 	GameOptions.SetInt("Engine/Watchdog", "TimeoutSeconds", self.settings.photo.TimeoutSeconds)
 end
 
-function shoo:new()
+function Shoo:init()
 	registerForEvent("onInit", function()
-		if not Config.fileExists("config.json") then
-			Config.createConfig("config.json", self.settingsDefault)
+		if not config.fileExists(self.CONFIG_PATH) then
+			config.createConfig(self.CONFIG_PATH, self.settingsDefault)
 		end
 
-		self.settings = Config.loadFile("config.json")
+		self.settings = config.loadFile(self.CONFIG_PATH)
 		self:applyOptions()
-		self.settingsUI.main(self)
+		settingsUI.main(self)
 
-		Observe("PhotoModePlayerEntityComponent", "OnGameAttach", function(self)
-			shoo:applyPMOptions()
+		Observe("PhotoModePlayerEntityComponent", "OnGameAttach", function()
+			self:applyPMOptions()
 		end)
 
-		Observe("PhotoModePlayerEntityComponent", "OnGameDetach", function(self)
-			shoo:applyOptions()
+		Observe("PhotoModePlayerEntityComponent", "OnGameDetach", function()
+			self:applyOptions()
 		end)
 	end)
 	return self
 end
 
-return shoo:new()
+return Shoo:init()
