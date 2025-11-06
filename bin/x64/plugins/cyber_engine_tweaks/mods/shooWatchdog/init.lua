@@ -4,7 +4,7 @@ shoo = {
 		enabled = true,
 		global = {
 			KillProcess = true,
-			TimeoutSeconds = 120,
+			TimeoutSeconds = 180,
 		},
 		photo = {
 			KillProcess = false,
